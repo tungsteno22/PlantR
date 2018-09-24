@@ -1,21 +1,49 @@
 const { db, Gardener, Plot, Vegetable } = require('./models');
 
-const database = db.sync({ force: true })
+const database = db.sync();
 console.log(database);
 database
   .then(() => {
-    console.log('this was a success');
-    db.close()
+    console.log('This was a success');
+    const vegetable = new Vegetable({
+      name: 'potato',
+      color: 'brown',
+      planted_on: new Date(),
+    });
+    // vegetable.save();
+    return vegetable;
+    // db.close();
   })
-  .catch((error) => {
-    console.log('we failed' + error);
-    db.close()
+  .then(vegetable => {
+    return vegetable.save();
+  })
+  .then(() => db.close())
+  .catch(error => {
+    console.log('We failed' + error);
+    db.close();
   });
 
-const vegetable = new Vegetable({
-  name: 'potato',
-  color: 'brown',
-  planted_on: new Date()
-})
-vegetable.save();
-console.log('our vegetable is what???', vegetable);
+// const color = index => {
+//   switch (index) {
+//     case 1:
+//       return 'Red';
+//     case 2:
+//       return 'Orange';
+//     case 3:
+//       return 'Blue';
+//     default:
+//       return 'Purple';
+//   }
+// };
+// const newVegArr = [];
+
+// for (let i = 0; i < 100; ++i) {
+//   newVegArr.push(
+//     new Vegetable({
+//       name: `Vegetable ${i}`,
+//       color: `${color(i % 4)}`,
+//       planted_on: new Date(),
+//     })
+//   );
+// }
+// Promise.all(newVegArr.map(x => x.save()));
